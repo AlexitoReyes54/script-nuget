@@ -15,16 +15,40 @@ let FOLDER_PATH = "packeges"
 function operateRow(row){
     let extract = row.substring(39,row.length);
     let points = extract.split(".")
-    let version = points[points.length - 3] + "."+points[points.length - 2]+"."+ deletRegularExpresion(points[points.length - 1])
-    version.trim()
-    
-    for (let i = 0; i < 3; i++) {
-        points.pop()
-    }
-    let name = points.join('.')
 
-    let data = `<package id="`+name+`" version="`+version+`" targetFramework="net452" />\n`
-    list.push(data)
+    let versionPosition = extract.search(/.[1-9]/,".x")
+    let version_ = extract.slice(versionPosition)
+    let versionArr = version_.split(".")
+    
+
+    switch (versionArr.length) {
+        case 1:
+            //zero version number
+            zeroNumbersVersion(points)
+            break;
+        case 2:
+            //one version number
+            oneNumbersVersion(points)
+            break;
+        case 3:
+            //two version number
+            twoNumbersVersion(points)
+            break;
+
+        case 4:
+            //three version number
+            threeNumbersVersion(points)
+            break;
+
+        case 5:
+            //four version number
+            fourNumbersVersion(points)
+            break;
+        default:
+
+            break;
+    }
+   
    
 }
 
@@ -74,6 +98,67 @@ function createConfigFile(info){
         if (err) throw err;
         console.log('Saved!');
       });
+}
+
+function threeNumbersVersion(points) {
+    let version = points[points.length - 3] + "."+points[points.length - 2]+"."+ deletRegularExpresion(points[points.length - 1])
+    version.trim()
+    
+    for (let i = 0; i < 3; i++) {
+        points.pop()
+    }
+    let name = points.join('.')
+
+    let data = `<package id="`+name+`" version="`+version+`" targetFramework="net452" />\n`
+    list.push(data)
+}
+
+function fourNumbersVersion(points) {
+    let version = points[points.length - 4] + "."+ points[points.length - 3] + "."+points[points.length - 2]+"."+ deletRegularExpresion(points[points.length - 1])
+    version.trim()
+    
+    for (let i = 0; i < 4; i++) {
+        points.pop()
+    }
+    let name = points.join('.')
+
+    let data = `<package id="`+name+`" version="`+version+`" targetFramework="net452" />\n`
+    list.push(data)
+}
+
+function twoNumbersVersion(points) {
+    let version = points[points.length - 2]+"."+ deletRegularExpresion(points[points.length - 1])
+    version.trim()
+    
+    for (let i = 0; i < 2; i++) {
+        points.pop()
+    }
+    let name = points.join('.')
+
+    let data = `<package id="`+name+`" version="`+version+`" targetFramework="net452" />\n`
+    list.push(data)
+}
+
+
+function oneNumbersVersion(points) {
+    let version =  deletRegularExpresion(points[points.length - 1])
+    version.trim()
+    
+    for (let i = 0; i < 1; i++) {
+        points.pop()
+    }
+    let name = points.join('.')
+
+    let data = `<package id="`+name+`" version="`+version+`" targetFramework="net452" />\n`
+    list.push(data)
+}
+
+function zeroNumbersVersion(points) {
+    
+    let name = points.join('.')
+
+    let data = `<package id="`+ deletRegularExpresion(name)+`" version="" targetFramework="net452" />\n`
+    list.push(data)
 }
 
 getFolders()
